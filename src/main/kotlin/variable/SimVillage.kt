@@ -97,13 +97,14 @@ configureGreetingFunction()("P")
  */
 fun runSimulation1() {
     val greetingFunction = configureGreetingFunction()
-    println(greetingFunction("Loli"))
-    println(configureGreetingFunction()("P"))
+    println(greetingFunction("Loli")) // вызывая через greetingFunction переменная numBuildings меняется
+    println(configureGreetingFunction()("P")) /* вызывая напрямую переменная numBuildings не меняется -
+     так как функция замыкания создаётся каждый раз новая */
 }
 
 fun configureGreetingFunction(): (String) -> String {
     val structureType = "hospital"
-    var numBuildings = (1..10).random()
+    var numBuildings = 1
     return { playerName: String ->
         val currentYear = 2025
         numBuildings += 1
