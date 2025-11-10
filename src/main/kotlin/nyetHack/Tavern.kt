@@ -5,10 +5,10 @@ data class Drink(
     val sprat: String = "sprat",
 ) {
     companion object {
-        fun fromInput(input: String?): String = when (input?.trim()?.lowercase()) {
+        fun fromInput(input: String?): String = when (input?.trim()?.lowercase() ?: "fack of this is not drink") {
             Drink().beer -> "beer drink"
             Drink().sprat -> "sprat drink"
-            else -> "not drink"
+            else -> "not drink $input"
         }
     }
 }
@@ -30,6 +30,13 @@ fun main() {
 //            else -> "not drink"
 //        }
 //    )
+    var beverage = readLine()?.let {
+        if (it.isNotBlank()) { // проверяет строку на символы, isNotEmpty() проверяет длину строки
+            it.lowercase()
+        } else {
+            "is not drink"
+        }
+    }
 
     var num = 0
     while (num < 3) {
