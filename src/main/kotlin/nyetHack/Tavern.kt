@@ -1,5 +1,7 @@
 package nyetHack
 
+import kotlin.math.roundToInt
+
 const val TAVERN_NAME = "Taernyl's Folly"
 
 data class Drink(
@@ -14,6 +16,10 @@ data class Drink(
         }
     }
 }
+
+var playerGold = 0
+var playerSilver = 0
+var dracoinCoins = 5
 
 fun main() {
 //    val beverage = readlnOrNull()
@@ -48,8 +54,32 @@ fun main() {
 
     //println(Drink.fromInput(readlnOrNull()))
     placeOrder("shandy,Dragon's Breath,5.91")
-    placeOrder("elixir,Shirley's Temple,4.12")
+//    placeOrder("elixir,Shirley's Temple,4.12")
 
+}
+
+fun performPurchase(price: Double) {
+    displayBalance()
+    val totalPurse = (dracoinCoins * 1.43) + playerGold + (playerSilver / 100.0)
+    println("Total purse: $totalPurse")
+    println("Purchasing item for $price")
+
+    if (totalPurse >= price) {
+        val remainingBalance = totalPurse - price
+        println("Remaining balance: ${"%.2f".format(remainingBalance / 1.43)}")
+
+        val remainingGold = remainingBalance.toInt()
+        val remainingSilver = (remainingBalance % 1 * 100).roundToInt()
+        playerGold = remainingGold
+        playerSilver = remainingSilver
+    } else {
+        println("insufficient funds")  // недостаточно средств
+    }
+    displayBalance()
+}
+
+fun displayBalance() {
+    println("Player's purse balance: Gold: $playerGold, Silver: $playerSilver")
 }
 
 private fun placeOrder(menuData: String) {
@@ -62,17 +92,22 @@ private fun placeOrder(menuData: String) {
     и инициализировать сразу несколько переменных*/
     val (type, name, price) = menuData.split(',').map { it.trim() }
     println("Madrigal buys a $name ($type) for $price.")
-    val phrase =if (name == "Dragon's Breath") {
+
+    performPurchase(price.toDouble())
+//    performPurchase(price.toDouble())
+
+    val phrase = if (name == "Dragon's Breath") {
         "Madrigal exclaims: ${("Ah, delicious $name!").toDragonSpeak()}"
-    } else{
+    } else {
         "Madrigal says: Thanks for the $name."
     }
     println(phrase)
 }
 
 private fun String.toDragonSpeak() =
-    replace(Regex("[aeiou]")) {
-        when (it.value) {
+    replace(Regex("[aeiouAEIOU]")) { /* Regex сравнивает передоваемую строку
+    с указанными символами*/
+        when (it.value.lowercase()) { // значение регистра строки не поменяется это локально для сравнения
             "a" -> "4"
             "e" -> "3"
             "i" -> "1"
